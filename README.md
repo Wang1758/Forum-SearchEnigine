@@ -11,5 +11,5 @@
 # 项目启动
 
 # 项目实现日志
-[11.23-11.24]一些功能函数：mylogger -> Nocopyable -> redis -> condition -> MutexLock -> 
+[11.23-11.24]一些功能函数：mylogger -> Nocopyable -> redis -> MutexLock -> Condition ->
 Thread -> TaskQueue -> ThreadPool ->

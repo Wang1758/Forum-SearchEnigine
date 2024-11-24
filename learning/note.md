@@ -103,3 +103,49 @@ public:
    - constexpr：声明编译时常量表达式的函数或变量
    - noexcept：声明函数不抛出异常
    - inline：内联函数
+
+### 3. Condition、MutexLock
+##### 3.1 前向声明
+前向声明是指在使用某个类之前，只声明这个类的存在，而不定义这个类的具体内容。这样可以减少头文件的依赖，提高编译速度。
+> 使用前向声明的条件：适用于只需要使用指向某个类型的指针或引用的情况，编译器只需要知道这个类型的存在，而不需要知道这个类型的具体内容
+```cpp
+class MutexLock;  // 前向声明
+
+class Condition : Nocopyble {
+    // 类定义如
+    Condition(MutexLock &mutex);
+};
+```
+在.cpp实现的文件中，当需要使用 Condition 类时，再包含 MutexLock.h 头文件即可。
+```cpp
+#include "MutexLock.h"
+#include "Condition.h"
+// 代码实现
+```
+
+##### 3.2 std::mutex与std::condition_variable
+MutexLock、Condition使用POSIX线程库实现了简单的互斥锁和条件变量，但是可以使用c++11实现的这些更高级的类，以下是C++11标准库中的实现：
+1. std::mutex：互斥锁，用于保护共享资源，确保同一时间只有一个线程访问共享资源
+2. std::condition_variable：条件变量，用于线程间的同步，当共享资源的状态发生变化时，通知等待的线程
+3. std::lock_guard：在构造时自动加锁，析构时自动解锁，不允许手动控制。
+4. std::unique_lock: 提供了手动控制锁的功能，可以延迟加锁、试图加锁、采用现有锁、手动解锁和重新加锁。
+```cpp
+std::mutex mtx;
+std::unique_lock<std::mutex> lock(mtx);  // 自动加锁
+
+std::unique_lock<std::mutex> lock(mtx, std::defer_lock);  // 延迟加锁，需要手动调用 lock()
+lock.lock();  // 手动加锁
+
+std::unique_lock<std::mutex> lock(mtx, std::try_to_lock);  // 尝试加锁
+// 如果锁已经被其他线程占用，则构造函数立即返回，不会阻塞
+if (lock.owns_lock()) {
+    // 锁定成功
+} else {
+    // 锁定失败
+}
+
+mtx.lock();  // 手动加锁
+std::unique_lock<std::mutex> lock(mtx, std::adopt_lock);  // 采用现有锁
+```
+
+
