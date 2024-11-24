@@ -73,3 +73,33 @@ int main() {
 }
 ```
 > 通常使用::atexit，表示使用全局命名空间，这是为了避免和某些局部命名空间的函数冲突
+
+### 2. Nocopyble
+##### 2.1 delete
+C++11 中可以使用 delete 关键字来禁用某些函数，通常用在拷贝构造函数、赋值运算符和析构函数上。
+> 编译器会在编译期间检查是否调用了被禁止的函数，而不是在运行时出现问题
+```cpp
+class Nocopyable {
+public:
+    Nocopyable() {}
+    Nocopyable(const Nocopyable&) = delete;  // 禁用拷贝构造函数
+    Nocopyable& operator=(const Nocopyable&) = delete;  // 禁用赋值运算符
+    ~Nocopyable() = default;
+};
+```
+> 在单例模式中，可以使用 delete 关键字禁用拷贝构造函数和赋值运算符，确保单例对象只有一个实例
+
+**其他关键字**：
+1. 构造和析构关键字
+   - explicit：放置构造函数的隐式转换
+   - virtual：虚函数或虚基类
+   - override：显示声明覆盖基类的虚函数
+   - final：禁止类被继承或者虚函数被覆盖
+2. 特殊成员函数控制
+   - delete：禁用函数，放置其被调用
+   - default：显式要求编译器生成默认实现
+3. 其他控制
+   - mutable：允许 const 成员函数修改成员变量
+   - constexpr：声明编译时常量表达式的函数或变量
+   - noexcept：声明函数不抛出异常
+   - inline：内联函数
