@@ -1,6 +1,6 @@
 #pragma once
 
-namespace w {
+namespace wd {
     class SocketIO {
     public:
         explicit SocketIO(int fd);
