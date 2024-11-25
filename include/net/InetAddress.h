@@ -5,7 +5,9 @@
 namespace wd{
     class InetAddress{
     public:
+        // 监听所有地址
         explicit InetAddress(unsigned short port);
+        // 监听指定地址
         InetAddress(const std::string &ip, unsigned short port);
         InetAddress(const struct sockaddr_in &addr);
 
