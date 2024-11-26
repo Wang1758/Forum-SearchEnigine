@@ -160,3 +160,41 @@ std::unique_lock<std::mutex> lock(mtx, std::adopt_lock);  // 采用现有锁
 __thread int x = 0;  // 线程局部存储变量
 ```
 > 在多线程编程中，线程局部存储变量可以避免全局变量的竞争，提高程序的性能
+
+### 5.TCPConnection
+> 类解释：TCPConnection 类是一个用于管理和处理 TCP 网络连接的类。负责维护一个TCP连接的生命周期，包括连接的建立、数据的读写、连接的关闭等。提供回调函数机制用于在连接建立、数据到达、连接关闭等事件发生时通知上层应用。
+> 此外，该类还继承了 std::enable_shared_from_this<T> 类，用于解决在回调函数中获取当前对象的 shared_ptr 的问题。继承了Nocopyble类，防止类实例被复制。
+##### 5.1 std::enable_shared_from_this<MyClass>
+c++11新增的模板类，用于解决在回调函数中获取当前对象的 shared_ptr 的问题。在类中继承 enable_shared_from_this 类，可以通过 shared_from_this() 函数获取当前对象的 shared_ptr。
+```cpp
+class MyClass : public std::enable_shared_from_this<MyClass> {
+public:
+    std::shared_ptr<MyClass> getShared() {
+        return shared_from_this();
+    }
+};
+```
+
+##### 5.2 std::ostringstream
+std::ostringstream 是 std::stringstream 的派生类，用于将各种类型的数据转换为字符串。可以通过 << 运算符将数据插入到流中，通过 str() 函数获取流中的字符串。
+并且还继承了ostream类，可以使用ostream类的所有方法。如格式化输出、控制输出精度等
+```cpp
+std::ostringstream oss;
+oss << "Hello, " << 123 << " " << 3.14;
+std::string str = oss.str();
+```
+> 如果需要重用oss对象，可以使用 oss.str("") 清空流中的内容
+```cpp
+oss.str("");        // 清空流内容
+oss.clear();        // 重置流状态
+```
+
+### 6. Eventloop
+##### 6.1 事件驱动的设计
+事件驱动的设计是一种常见的设计模式，用于处理异步事件。在事件驱动的设计中，事件循环负责监听事件，当事件发生时，调用相应的回调函数处理事件。
+> 在TCPConnection中包含有一个EventLoop的指针。Eventloop监听到连接事件后，创建一个新的TCPConnection对象并传入当前Eventloop对象的指针，这样TCPConnection可以通过EventLoop提供的任务调度接口（runInloop）将某些任务（在本项目中为写事件）交给Eventloop执行，这样可以防止阻塞当前线程（AI认为的？？防止多线程中多个线程同时操作一个TCPConnection对象）。
+**事件管理：**
+- 事件循环：负责监听事件，调用相应的回调函数处理事件
+- 事件分发：将事件分发给对应的事件处理器
+- 事件处理：处理事件的具体逻辑
+
