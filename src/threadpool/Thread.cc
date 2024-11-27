@@ -17,7 +17,7 @@ namespace wd {
 
     void* Thread::threadFunc(void* arg) {
         current_thread::predis = new Redis();
-        current_thread::predis->connect("127.0.0.1", 6379);
+        current_thread::predis->connect("127.0.0.1", 6379);     // 连接到Redis服务器
 
         Thread* pThread = static_cast<Thread*>(arg);    //传进来的this指针
         if(pThread) {
