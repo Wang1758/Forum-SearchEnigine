@@ -26,6 +26,7 @@
 > cppjieba、simhash、jsoncpp、tinyxml-2库已经包含在项目中，无需额外安装
 
 ### 项目结构
+```shell
 .
 ├── CMakeLists.txt
 ├── README.md
