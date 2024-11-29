@@ -39,9 +39,9 @@ namespace wd {
 
             if(lhsCrossProduct / sqrt(lhsVectorLength) < 
                rhsCrossProduce / sqrt(rhsVectorLength)) {
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         }
     };

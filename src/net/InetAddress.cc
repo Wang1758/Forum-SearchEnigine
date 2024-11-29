@@ -21,13 +21,13 @@ namespace wd{
 
     InetAddress::InetAddress(const struct sockaddr_in& addr) :_addr(addr){};
 
-    string InetAddress::ip() const {
+    std::string InetAddress::ip() const {
         char ipStr[INET_ADDRSTRLEN];
         if(::inet_ntop(AF_INET, &_addr.sin_addr.s_addr, ipStr, INET_ADDRSTRLEN) == nullptr) {
             perror("inet_ntop");
             return "";
         }
-        return string(ipStr);
+        return std::string(ipStr);
     }
 
     unsigned short InetAddress::port() const {
