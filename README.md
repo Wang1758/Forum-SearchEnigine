@@ -54,7 +54,7 @@
 │   ├── WordQueryServer
 ├── conf                配置文件
 │   ├── online.conf
-├── data                数据文件
+├── data                前置数据
 ├── log                 日志文件
 │   ├── search.log
 ├── php_TCP             前端文件
